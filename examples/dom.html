@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Leak Example: Dettached Dom</title>
+  <style>
+    .withborder {
+      margin:10px;
+      padding:10px;
+      border: solid 1px grey;
+    }
+    header {
+      border-bottom: solid 1px grey;
+    }
+    section {
+      margin: 20px
+    }
+    .logo {
+      width:90px;
+    }
+    #btn {
+      margin-right: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://2171535.fs1.hubspotusercontent-na1.net/hubfs/2171535/Bitovi_July_2016_Theme/Images/bitovi-logo-x2.png" class="logo" alt="">
+  </header>
+  <section>
+    <button id="btn">Start LeakLog</button> Total Runs: <span id="runs"></span>
+  </section> 
+<script>
+
+// console.log leaks. fixed in recent chrome version, when dev tools are not opened.
+
+function leakLog() {
+  let arr = [1,2,3,4];
+  console.log(arr);
+  return arr
+}
+
+let totalRuns = 0;
+
+let sum = 0;
+
+function startLeakLog(){
+  let runs = document.getElementById('runs');
+  runs.innerText = 1;
+
+  for (let i = 0; i < 10000; i++) {
+    const arr = leakLog();
+    sum +=  arr.reduce((a, b) => (a + b));
+    ++totalRuns
+  }
+
+  runs.innerText = totalRuns;
+  console.log('done');
+  console.log('sum',sum);
+}
+
+document.getElementById('btn').addEventListener('click',startLeakLog);
+
+</script>
+</body>
+</html>
